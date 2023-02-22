@@ -1,0 +1,4 @@
+*bc_venv
+*__pycache__
+unused.py
+*.vscode
