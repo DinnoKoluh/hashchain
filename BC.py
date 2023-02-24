@@ -1,6 +1,7 @@
 import hashlib
 import time
 from Net import *
+from Tx import *
 
 class Block:
     def __init__(self, data, previous_timestamp = "0", previous_hash = " "):
@@ -35,6 +36,16 @@ class Block:
             self.hash = self.calculateHash()
         end_time = time.time()
         print("Block has been mined successfully! \nTime taken: {}".format(end_time - start_time))
+    
+    # TODO: still change to accommodate tx validation if the from account doesn't have enough funds
+    def hasValidTx(self):
+        """
+        Check if the transactions contained inside a block are valid.
+        """
+        for tx in self.data:
+            if not(tx.isValid()):
+                return False
+        return True
 
 class BlockChain:
     def __init__(self, network:Network):
@@ -44,10 +55,14 @@ class BlockChain:
         self.difficulty = 3 # how many 0's are at the beginning of the hash
         gen_block = Block("GENESIS BLOCK", time.time(), "0x000") # creating genesis block
         gen_block.mineBlock(self.difficulty)
+
         self.chain = [gen_block] # creating the chain
         self.pending_txs = [] # where transactions are stored while a new block is being mined 
+        # TODO reward to be regarded as a percentage of transaction amount
         self.reward = 100 # mining reward given to miner if a block is successfully mined
         self.network = network # network of accounts 
+        # TODO add system of a master account from where the rewards are given
+        self.supply = 10000 # total supply blockchain supply
         
     def getLatestBlock(self):
         """
@@ -89,6 +104,8 @@ class BlockChain:
         Add a new transaction to the transaction list.
         """
         self.pending_txs.append(transaction)
+        print("Transaction successfully added! \nTx type {}".format(transaction.tx_type))
+        return True
 
     def printPendingTxInfo(self):
         """
@@ -104,6 +121,9 @@ class BlockChain:
         for i in range(1, len(self.chain)):
             currBlock = self.chain[i]
             prevBlock = self.chain[i-1]
+            # check if all tx in the block are valid
+            if (not(currBlock.hasValidTx())):
+                return False
             # case when block hash is wrong
             if (currBlock.hash != currBlock.calculateHash()):
                 return False
