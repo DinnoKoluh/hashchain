@@ -2,3 +2,5 @@
 *__pycache__
 unused.py
 *.vscode
+*.sqlite3
+*.png

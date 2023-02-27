@@ -1,0 +1,14 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- loading static files here with template tagging -->
+
+Hello World From Base!!!
+<!-- <img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" 
+width="400" 
+height="500"> -->
+
+<li><a id="len1" class="hoverable" href="{% url 'base'  %}">Home</a></li>
+<li><a id="len2" class="hoverable" href="{% url 'blockchain'  %}">Blockchain visualization</a></li>
+{% block content %}
+<b> Welcome Home.</b>
+{% endblock %}
