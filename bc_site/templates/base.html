@@ -1,14 +1,28 @@
-{% load static %}
 <!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" href="{% static "css/style.css"%}">
 <!-- loading static files here with template tagging -->
 
-Hello World From Base!!!
-<!-- <img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" 
-width="400" 
-height="500"> -->
 
-<li><a id="len1" class="hoverable" href="{% url 'base'  %}">Home</a></li>
-<li><a id="len2" class="hoverable" href="{% url 'blockchain'  %}">Blockchain visualization</a></li>
+  <head>
+    <meta charset="utf-8">
+    <title>My Toolbar</title>
+    <link rel="stylesheet" href="{% static "css/toolbar_style.css"%}">
+  </head>
+  <body>
+    <header class="toolbar">
+      <div class="toolbar__logo">BlockChain.org</div>
+      <nav class="toolbar__items">
+        <a href="{% url 'base'%}">Home</a>
+        <a href="{% url 'blockchain'%}">Blockchain</a>
+        <a href="{% url 'create_account'%}">Create Account</a>
+        <a href="https://github.com/DinnoKoluh/blockchain" target="_blank">Repository</a>
+      </nav>
+    </header>
+    
+  </body>
+
 {% block content %}
-<b> Welcome Home.</b>
+<h1> Welcome Home.</h1>
+<img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" width="400" height="500">
 {% endblock %}
