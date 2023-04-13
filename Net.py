@@ -8,6 +8,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 
 class Account:
     def __init__(self):
+        self.username = ""
         self.key_pair = self.generateKeys()
 
         self.secret_key = self.key_pair.private_bytes(

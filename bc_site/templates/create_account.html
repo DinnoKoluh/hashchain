@@ -1,12 +1,45 @@
 {% extends 'base.html' %}
 {% load static %} 
 <!-- static files need to be loaded again -->
-
+{% block title %} | Create Account {% endblock %}
 {% block content %}
-<h1>Register</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-  </form>
+<h1 align="center">Register</h1>
+  <div class="center">
+    <form method="post">
+      {% csrf_token %}
+      <div>
+        <label>Username:</label>
+        {{ form.username }}
+      </div>
+      <div>
+        <label>Email:</label>
+        {{ form.email }}
+      </div>
+      <div>
+        <label>Password:</label>
+        {{ form.password1 }}
+      </div>
+      <div>
+        <label>Repeat Password:</label>
+        {{ form.password2 }}
+      </div>
+      {% if form.errors %}
+        {% for field in form %}
+          {{ field.name }}
+          {{ field.errors }}
+        {% endfor %}
+        <!-- {{ form.non_field_errors }} -->
+      {% endif %}
+      <button type="submit">Register</button>
+    </form>
+  </div>
+  <!-- message of creating an account -->
+  <!-- {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <b{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</b> <br>
+      {% endfor %}
+  </ul>
+  {% endif %} -->
+
 {% endblock %}

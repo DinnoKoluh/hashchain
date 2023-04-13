@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% load static %} 
 <!-- static files need to be loaded again -->
+{% block title %} | Chain {% endblock %}
 
 {% block content %}
 <b>Welcome to block chain visualization!!!</b>
-<img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" width="100" height="300">
+<img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" width="100" height="100">
+<div>
+    {% for block in blocks %}
+        <h1> {{block.blockID}} </h1>
+    {% endfor %}
+</div>
 {% endblock %}

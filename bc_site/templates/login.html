@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %} 
+<!-- static files need to be loaded again -->
+{% block title %} | LogIn {% endblock %}
+{% block content %}
+<h1 align="center">Log In</h1>
+  <div class="center">
+    <form method="post">
+      {% csrf_token %}
+      <div>
+        <label>Username:</label>
+        {{ form.username }}
+      </div>
+      <div>
+        <label>Password:</label>
+        {{ form.password }}
+      </div>
+
+      {% if form.errors %}
+        {% for field in form %}
+          {{ field.errors }}
+        {% endfor %}
+        <!-- {{ form.non_field_errors }} -->
+      {% endif %}
+      <button type="submit">Log In</button>
+    </form>
+  </div>
+
+{% endblock %}
+
