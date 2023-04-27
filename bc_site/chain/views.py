@@ -11,6 +11,12 @@ def base(request):
      """
      Where the homepage/base site will be located.
      """
+     return render(request, 'base.html')
+
+def transactions(request):
+     """
+     Where the transactions are going to be created site.
+     """
      if request.method == 'POST':
         form = TxForm(request.POST)
         if form.is_valid():
@@ -18,19 +24,20 @@ def base(request):
             given_to_address = form.cleaned_data['to_address']
 
             # checking if the given address is in the database   
-            if AccountModel.objects.filter(address=given_to_address).exists():
-               print("Given right address")
+            if not(AccountModel.objects.filter(address=given_to_address).exists()):
+               print("Given wrong address")
+               redirect('base')
 
             current_user = request.user.accountmodel # getting the current custom user model
             tx.my_address = current_user.address # setting my_address of the tx 
             # print(tx.my_address)
             # do any additional processing of the form data here
-            print(AccountModel.objects.all()[0])
+            # print(AccountModel.objects.all()[0]) # getting all the associated data
             tx.save()
-            return redirect('base')
+            return redirect('transactions')
      else:
           form = TxForm()
-     return render(request, 'base.html', {'form': form})
+     return render(request, 'transactions.html', {'form': form})
 
 def blockchain(request):
      """

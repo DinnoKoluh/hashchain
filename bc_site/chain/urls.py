@@ -10,5 +10,6 @@ urlpatterns = [
     path('create_account', views.create_account, name='create_account'),
     path('login', auth_views.LoginView.as_view(template_name='login.html', authentication_form=LogInForm), name='login'),
     path('account_base', views.account_base, name='account_base'),
-    path('logout', views.logout_view, name='logout')
+    path('logout', views.logout_view, name='logout'),
+    path('transactions', views.transactions, name='transactions'),
 ]
