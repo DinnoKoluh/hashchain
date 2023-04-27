@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'chain',
 ]
 
+#AUTH_USER_MODEL = 'chain.AccountModel'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

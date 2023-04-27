@@ -3,8 +3,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .forms import SignUpForm
 from django.contrib import messages
-from .models import BlockStruct
+from .models import BlockStruct, AccountModel
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 
 def base(request):
      """
@@ -28,10 +29,10 @@ def create_account(request):
      """
      if request.method == 'POST':
         form = SignUpForm(request.POST)
-        print("inside1")
         if form.is_valid():
-          print("inside2")
+          print("inside")
           form.save()
+          
           return redirect('login')
      else:
          form = SignUpForm()
@@ -47,6 +48,10 @@ def account_base(request):
             }
      return render(request, 'account_base.html', context)
 
+@login_required # decorator
 def logout_view(request):
+    """
+    Simple view for logging out.
+    """
     logout(request)
     return redirect('base')

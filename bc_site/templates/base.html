@@ -31,7 +31,8 @@
 <body>
   <h1> Welcome Home.</h1>
   {% if request.user.is_authenticated %}
-    This is: {{ user.username }}
+    <h2> This account belongs to: {{ user.username }} </h2>
+    <h3> My address is: {{ user.accountmodel.address }}</h3>
   {% endif %}
   <img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" width="400" height="500">
   <p> This page contains some basic info about this project. </p>
