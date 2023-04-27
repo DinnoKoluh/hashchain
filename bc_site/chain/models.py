@@ -13,14 +13,10 @@ from django.dispatch import receiver
 # network = Network()
 # bc = BlockChain(network)
 
-# Create your models here.
-
-# need to create user 
 class AccountModel(User):
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'account'
     
-    # def __init__(self):
     #user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="account", unique=True)
     account = Account()
     address = models.CharField(max_length=64, default=account.address, editable=True)
@@ -31,26 +27,22 @@ class AccountModel(User):
 
     def __str__(self):
         return self.address
-
-    # def set_password(self, raw_password):
-    #     self.user.set_password(raw_password)
-    #     self.user.save()
     
-# @receiver(post_save, sender=User)
-# def create_user_accountmodel(sender, instance, created, **kwargs):
-#     if created:
-#         AccountModel.objects.create(user=instance)
-
-# @receiver(post_save, sender=User)
-# def save_user_accountmodel(sender, instance, **kwargs):
-#     instance.profile.save()
+    def get_balance(self):
+        return self.account.getBalance()
+    
+    def create_Tx(self, to_address, amount):
+        return TxModel()
+    
+    def get_address(self):
+        return self.address
 
 # creating transactions
 class TxModel(models.Model):
     """
     Model that contains transaction details
     """
-    my_add = models.CharField(max_length=64, default='0000000', editable=True)
+    my_address = models.CharField(max_length=64, default='0000000', editable=True)
     to_address = models.CharField(max_length=64)
     amount = models.FloatField()
 

@@ -33,6 +33,14 @@
   {% if request.user.is_authenticated %}
     <h2> This account belongs to: {{ user.username }} </h2>
     <h3> My address is: {{ user.accountmodel.address }}</h3>
+    <h3> My current blance is: {{ user.accountmodel.get_balance }} </h3>
+
+    <h1>Create new transaction (fill out the form)</h1>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Submit</button>
+    </form>
   {% endif %}
   <img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" width="400" height="500">
   <p> This page contains some basic info about this project. </p>
