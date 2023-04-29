@@ -6,13 +6,20 @@
 <h1 align="center">Create Transactions</h1>
   <div class="center">
     <h2> This account belongs to: {{ user.username }} </h2>
-    <h3> My address is: {{ user.accountmodel.address }}</h3>
-    <h3> My current blance is: {{ user.accountmodel.get_balance }} </h3>
+    <h3> My address is: {{ user.account.address }}</h3>
+    <h3> My current balance is: {{ user.account.get_balance }} </h3>
 
     <h2>Create new transaction (fill out the form)</h2>
     <form method="post">
       {% csrf_token %}
-      {{ form.as_p }}
+      <div>
+        <label>To address:</label>
+        {{ form.to_address }}
+      </div>
+      <div>
+        <label>Amount:</label>
+        {{ form.amount }}
+      </div>
       <button type="submit">Submit</button>
     </form>
   </div>

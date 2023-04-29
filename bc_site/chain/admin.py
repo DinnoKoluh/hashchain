@@ -1,15 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import BlockStruct, TxModel, AccountModel
+from .models import Block, Tx, Account
 # Register your models here
 
-admin.site.register(BlockStruct)
-admin.site.register(TxModel)
+admin.site.register(Block)
+admin.site.register(Tx)
 #admin.site.register(AccountModel)
 
 class AccountModelInline(admin.StackedInline):
-    model = AccountModel
+    model = Account
     can_delete = False
     verbose_name_plural = "accounts"
 

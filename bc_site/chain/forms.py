@@ -1,12 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import AccountModel, TxModel
+from .models import Account, Tx, Block
 
 class SignUpForm(forms.ModelForm):
 #class SignUpForm(UserCreationForm):
     class Meta:
-        model = AccountModel
+        model = Account
         #model = User
         fields = ('username', 'email', 'password1', 'password2') #, 'address', 'test')
     
@@ -44,7 +44,20 @@ class LogInForm(AuthenticationForm):
 
 class TxForm(forms.ModelForm):
     class Meta:
-        model = TxModel
+        model = Tx
         fields = ('to_address', 'amount')
-    
-    
+    to_address = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder': 'Input address', 'cols': 100, 'rows': 20
+    }))
+
+class BlockForm(forms.ModelForm):
+    """
+    Mining block, doesn't need any fields, just the mining.
+    """
+    class Meta:
+        model = Block
+        exclude = ()
+    txs = forms.ModelMultipleChoiceField(
+        queryset=Tx.objects.filter(executed=False),
+        widget=forms.CheckboxSelectMultiple
+    )

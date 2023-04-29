@@ -1,11 +1,15 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
-from .forms import SignUpForm, TxForm
+from .forms import SignUpForm, TxForm, BlockForm
 from django.contrib import messages
-from .models import BlockStruct, AccountModel
+from .models import Block, Account, Tx
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django import forms
+import sys
+sys.path.append('C:\\Users\\pc\\Desktop\\MyProjects\\my_blockchain')
+import Net
 
 def base(request):
      """
@@ -24,12 +28,11 @@ def transactions(request):
             given_to_address = form.cleaned_data['to_address']
 
             # checking if the given address is in the database   
-            if not(AccountModel.objects.filter(address=given_to_address).exists()):
-               print("Given wrong address")
-               redirect('base')
+            if not(Account.objects.filter(address=given_to_address).exists()):
+               raise forms.ValidationError("The given address does not exist")
 
-            current_user = request.user.accountmodel # getting the current custom user model
-            tx.my_address = current_user.address # setting my_address of the tx 
+            current_user = request.user.account # getting the current custom user model
+            tx.from_address = current_user.address # setting my_address of the tx 
             # print(tx.my_address)
             # do any additional processing of the form data here
             # print(AccountModel.objects.all()[0]) # getting all the associated data
@@ -43,9 +46,25 @@ def blockchain(request):
      """
      Where the blockchain visualization site will be located.
      """
-     blocks = BlockStruct.objects.all()
+     blocks = Block.objects.all()
+     txs = Tx.objects.all()
+     # block.add_txs()
+     if request.method == 'POST':
+        form = BlockForm(request.POST)
+        if form.is_valid():
+          block = form.save(commit=False)
+          block.save()
+          block.add_txs()
+          block.save()
+          request.user.account.increase_balance(block.reward)
+          request.user.save()
+          return redirect('blockchain')
+     else:
+         form = BlockForm()
+
      context = {
           "blocks": blocks,
+          "form": form,
           }
      return render(request, 'blockchain.html', context)
 
@@ -56,9 +75,10 @@ def create_account(request):
      if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-          print("inside")
-          form.save()
-          
+          account_user = form.save(commit=False)
+          acc = Net.Account() # temporary create acc here to extract the address, needs to fixed later
+          account_user.address = acc.address
+          account_user.save()
           return redirect('login')
      else:
          form = SignUpForm()
