@@ -36,17 +36,20 @@ class Account(User):
         """
         Increasing account balance by amount.
         """
+        print("increase")
         self.balance = self.balance + amount
         self.save()
         return True
     
-    def decreaseBalance(self, amount):
+    def decrease_balance(self, amount):
         """
         Decreasing account balance by amount.
         """
+        print("decrease")
         if amount > self.balance:
             raise Exception("Not enough funds!")
         self.balance = self.balance - amount
+        self.save()
         return True
 
 class Tx(models.Model):
@@ -61,8 +64,16 @@ class Tx(models.Model):
     
     def __str__(self):
         return "Tx No. " + str(self.id)
-    def executeTx(self):
-        pass
+    
+    def execute_tx(self):
+        """
+        Executing a tx.
+        """
+        if self.tx_type == "ordinary":
+            Account.objects.filter(address=self.from_address)[0].decrease_balance(self.amount)
+            Account.objects.filter(address=self.to_address)[0].increase_balance(self.amount)
+            self.executed = True
+        return True
 
 class Block(models.Model):
     timestamp = models.TimeField(auto_now_add=True, editable=True)
@@ -89,13 +100,26 @@ class Block(models.Model):
         return super(Block, self).save(*args, **kwargs)
     
     def add_txs(self):
+        """
+        Adding all the tx's which weren't executed to the block.
+        """
         for tx in Tx.objects.filter(executed=False):
-            tx.executed = True
             self.txs.add(tx)
+    
+    def execute_txs(self):
+        """
+        Executing the pending tx's inside the block.
+        """
+        for tx in self.get_txs():
+            tx.execute_tx()
             tx.save()
-            self.save()   
+        return True
+
     
     def get_txs(self):
+        """
+        Return all the tx's stored in the block.
+        """
         return self.txs.all()
 
     def calculateHash(self):

@@ -6,26 +6,46 @@
 {% block content %}
 <!-- <b>Welcome to block chain visualization!!!</b>
 <img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" width="100" height="100"> -->
+
 <div>
-    <h1> Mine a block </h1>
-    <form method="post">
-        <h4>Available Transactions</h4>
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Mine Block</button>
-    </form>
-    {% for block in blocks %}
-        <div class="center">
-            <h3 align="center">Block {{block.pk}}. hash: {{block.hash}} </h3>
-            {% for tx in block.get_txs %}
-            <h4 align="center">Tx {{tx.pk}}. data: </h4>
-            <div class="center">
-                <h5>From address: {{tx.from_address}}</h5>
-                <h5>To address: {{tx.to_address}}</h5>
-                <h5>Amount: {{tx.amount}}</h5>
-            </div>
-            {% endfor %}
-        </div>
-    {% endfor %}
+    {% if request.user.is_authenticated %}
+        <h1> Mine a block </h1>
+        <form method="post">
+            <h4>Available Transactions</h4>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Mine Block</button>
+        </form>
+    {% endif %}
+    <h1 align="center"> The Blockchain </h1>
+    <table>
+        {% for block in blocks %}
+            {% if forloop.counter0|divisibleby:blocks_in_row %}
+                <tr class="space_under">
+            {% endif %} 
+            <td>
+                <div class="block-container">
+                    <h4>Block {{block.pk}}</h4>
+                    <i class="arrow right"> </i>
+                    {% comment %} <h5>hash: {{block.hash}} </h5>
+                    <h5>previous hash: {{block.previous_hash}}</h5> {% endcomment %}
+                    
+                    {% for tx in block.get_txs %}
+                        <button class="tx_button popup" onclick="txPopUp({{tx.pk}})">Tx {{tx.pk}}. data
+                            <span id="tx{{tx.pk}}" class="popuptext"> 
+                                <h5>From address: {{tx.from_address}}</h5>
+                                <h5>To address: {{tx.to_address}}</h5>
+                                <h5>Amount: {{tx.amount}}</h5>
+                            </span>
+                        </button>
+                    {% endfor %}
+
+                </div>
+            </td>
+            {% if forloop.counter|divisibleby:blocks_in_row %}
+                <tr>
+            {% endif %} 
+        {% endfor %}
+    </table>
 </div>
 {% endblock %}

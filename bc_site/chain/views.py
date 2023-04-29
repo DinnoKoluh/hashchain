@@ -8,7 +8,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django import forms
 import sys
-sys.path.append('C:\\Users\\pc\\Desktop\\MyProjects\\my_blockchain')
+sys.path.append('C:\\Users\\pc\\Desktop\\MyProjects\\my_blockchain\\vanilla_classes')
 import Net
 
 def base(request):
@@ -47,17 +47,18 @@ def blockchain(request):
      Where the blockchain visualization site will be located.
      """
      blocks = Block.objects.all()
-     txs = Tx.objects.all()
-     # block.add_txs()
      if request.method == 'POST':
         form = BlockForm(request.POST)
+        if len(Tx.objects.filter(executed=False)) == 0:
+            raise forms.ValidationError("Cannot mine empty block. Wait for Tx's.")
         if form.is_valid():
           block = form.save(commit=False)
           block.save()
           block.add_txs()
-          block.save()
           request.user.account.increase_balance(block.reward)
+          block.execute_txs()
           request.user.save()
+          block.save()
           return redirect('blockchain')
      else:
          form = BlockForm()
@@ -65,6 +66,7 @@ def blockchain(request):
      context = {
           "blocks": blocks,
           "form": form,
+          "blocks_in_row": 5
           }
      return render(request, 'blockchain.html', context)
 

@@ -58,6 +58,8 @@ class BlockForm(forms.ModelForm):
         model = Block
         exclude = ()
     txs = forms.ModelMultipleChoiceField(
+        required=False,
         queryset=Tx.objects.filter(executed=False),
-        widget=forms.CheckboxSelectMultiple
+        widget=forms.CheckboxSelectMultiple,
+        #choices=[True, True]
     )
