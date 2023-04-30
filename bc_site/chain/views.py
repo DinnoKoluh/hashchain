@@ -66,7 +66,8 @@ def blockchain(request):
      context = {
           "blocks": blocks,
           "form": form,
-          "blocks_in_row": 5
+          "blocks_in_row": 4,
+          "full_txs": Tx.objects.filter(executed=False),
           }
      return render(request, 'blockchain.html', context)
 

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %} 
+{% load chain_extras %}
 <!-- static files need to be loaded again -->
 {% block title %} | Chain {% endblock %}
 
@@ -9,26 +10,57 @@
 
 <div>
     {% if request.user.is_authenticated %}
-        <h1> Mine a block </h1>
-        <form method="post">
-            <h4>Available Transactions</h4>
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Mine Block</button>
-        </form>
+        <div style="border: 1px solid black">
+        
+            <h1 align="center"> Mine a block </h1>
+            <h4 align="center">Pending Transactions</h4>
+            <table class="center_table" style="border: 1px solid black"> 
+                {%  for form_tx, tx in form.txs|zip:full_txs %}
+                    {% if forloop.counter0|divisibleby:blocks_in_row %}
+                        <tr class="space_under">
+                    {% endif %} 
+                    
+                    <td class="tx_space_under"> 
+                        {% comment %} {{ form_tx }} {% endcomment %}
+                        {% block tx_info %}  
+                        <button name="tx_button" class="tx_button popup addMore" onClick="txPopUp({{tx.pk}})">Tx {{tx.pk}}. data
+                            <span id="tx{{tx.pk}}" class="popuptext"> 
+                                <h5>From address: {{tx.from_address}}</h5>
+                                <h5>To address: {{tx.to_address}}</h5>
+                                <h5>Amount: {{tx.amount}}</h5>
+                            </span>
+                        </button>
+                        {% endblock %}
+                    </td>
+                    {% if forloop.counter|divisibleby:blocks_in_row %}
+                        <tr>
+                    {% endif %}
+                {% endfor %} 
+            </table>
+            <form align="center" method="post">
+                {% csrf_token %}
+                <button align="center" type="submit" class="mine_block_button">Mine Block</button>
+            </form>
+        </div>
     {% endif %}
+    
+
+
     <h1 align="center"> The Blockchain </h1>
-    <table>
+    <table class="center_table">
         {% for block in blocks %}
             {% if forloop.counter0|divisibleby:blocks_in_row %}
                 <tr class="space_under">
             {% endif %} 
-            <td>
+            <td class="block_space_under">
                 <div class="block-container">
-                    <h4>Block {{block.pk}}</h4>
-                    <i class="arrow right"> </i>
-                    {% comment %} <h5>hash: {{block.hash}} </h5>
-                    <h5>previous hash: {{block.previous_hash}}</h5> {% endcomment %}
+                    <font size="5">Block {{block.pk}}</font>
+                    {% comment %} <i class="arrow right"> </i> {% endcomment %}
+                    <div class="hash_overflow"> 
+                        <font size="1">Hash: {{block.hash}} </font><br>
+                        <font size="1">Previous hash: {{block.previous_hash}}</font><br>
+                        <font size="1">Timestamp: {{block.timestamp}}</font>
+                    </div>
                     
                     {% for tx in block.get_txs %}
                         <button class="tx_button popup" onclick="txPopUp({{tx.pk}})">Tx {{tx.pk}}. data
