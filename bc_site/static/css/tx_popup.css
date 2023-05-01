@@ -1,11 +1,7 @@
 .popup {
     position: relative;
     display: inline-block;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    z-index: 9999;
   }
 
   .popup .popuptext {
@@ -14,7 +10,7 @@
     background-color: rgba(128, 119, 119, 0.7);;
     color: #fff;
     text-align: center;
-    border-radius: 6px;
+    border-radius: 10px;
     padding: 8px 0;
     position: absolute;
     z-index: 1;
@@ -32,7 +28,7 @@
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: #555 transparent transparent transparent;
+  border-color: rgba(128, 119, 119, 0.7) transparent transparent transparent;
 }
 
 /* Toggle this class - hide and show the popup */

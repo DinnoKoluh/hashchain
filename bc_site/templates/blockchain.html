@@ -1,41 +1,34 @@
 {% extends 'base.html' %}
+
 {% load static %} 
 {% load chain_extras %}
 <!-- static files need to be loaded again -->
 {% block title %} | Chain {% endblock %}
 
 {% block content %}
-<!-- <b>Welcome to block chain visualization!!!</b>
-<img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" width="100" height="100"> -->
+{% comment %} <img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" width="100" height="100">{% endcomment %}
 
 <div>
     {% if request.user.is_authenticated %}
-        <div style="border: 1px solid black">
+        <div>
         
             <h1 align="center"> Mine a block </h1>
             <h4 align="center">Pending Transactions</h4>
             <table class="center_table" style="border: 1px solid black"> 
+                <tbody>
                 {%  for form_tx, tx in form.txs|zip:full_txs %}
-                    {% if forloop.counter0|divisibleby:blocks_in_row %}
+                    {% if forloop.counter0|divisibleby:pending_tx_in_row %}
                         <tr class="space_under">
                     {% endif %} 
-                    
                     <td class="tx_space_under"> 
                         {% comment %} {{ form_tx }} {% endcomment %}
-                        {% block tx_info %}  
-                        <button name="tx_button" class="tx_button popup addMore" onClick="txPopUp({{tx.pk}})">Tx {{tx.pk}}. data
-                            <span id="tx{{tx.pk}}" class="popuptext"> 
-                                <h5>From address: {{tx.from_address}}</h5>
-                                <h5>To address: {{tx.to_address}}</h5>
-                                <h5>Amount: {{tx.amount}}</h5>
-                            </span>
-                        </button>
-                        {% endblock %}
+                        {% include "to_extend.html" %}
                     </td>
-                    {% if forloop.counter|divisibleby:blocks_in_row %}
-                        <tr>
+                    {% if forloop.counter|divisibleby:pending_tx_in_row %}
+                        </tr>
                     {% endif %}
-                {% endfor %} 
+                {% endfor %}
+                </tbody> 
             </table>
             <form align="center" method="post">
                 {% csrf_token %}
@@ -62,15 +55,22 @@
                         <font size="1">Timestamp: {{block.timestamp}}</font>
                     </div>
                     
+                    <table class="center_table">
                     {% for tx in block.get_txs %}
-                        <button class="tx_button popup" onclick="txPopUp({{tx.pk}})">Tx {{tx.pk}}. data
-                            <span id="tx{{tx.pk}}" class="popuptext"> 
-                                <h5>From address: {{tx.from_address}}</h5>
-                                <h5>To address: {{tx.to_address}}</h5>
-                                <h5>Amount: {{tx.amount}}</h5>
-                            </span>
-                        </button>
+                        {% if forloop.counter0|divisibleby:txs_in_row %}
+                            <tr class="space_under">
+                        {% endif %} 
+                        {% comment %} the code for generating the tx information 
+                        https://docs.djangoproject.com/en/4.1/ref/templates/builtins/
+                        {% endcomment %}
+                        <td class="tx_space_under">
+                            {% include "to_extend.html" %} 
+                        </td>
+                        {% if forloop.counter|divisibleby:txs_in_row %}
+                            <tr>
+                        {% endif %}
                     {% endfor %}
+                    </table>
 
                 </div>
             </td>

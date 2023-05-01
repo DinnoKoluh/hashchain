@@ -3,24 +3,63 @@
 <!-- static files need to be loaded again -->
 {% block title %} | Transactions {% endblock %}
 {% block content %}
-<h1 align="center">Create Transactions</h1>
-  <div class="center">
-    <h2> This account belongs to: {{ user.username }} </h2>
-    <h3> My address is: {{ user.account.address }}</h3>
-    <h3> My current balance is: {{ user.account.get_balance }} </h3>
+{% comment %} <h1 align="center">Create Transactions</h1> {% endcomment %}
 
-    <h2>Create new transaction (fill out the form)</h2>
-    <form method="post">
-      {% csrf_token %}
-      <div>
-        <label>To address:</label>
-        {{ form.to_address }}
-      </div>
-      <div>
-        <label>Amount:</label>
-        {{ form.amount }}
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+  <div class="tx_left_div">
+    <div class="account_info_div">
+      <h2 align="center">Account information</h2>
+      <h4> My username: {{ user.username }} </h4>
+      <h4> My address: {{ user.account.address }}</h4>
+      <h4> My balance is: {{ user.account.get_balance }} </h4>
+    </div>
+    <div class="create_tx_div"> 
+      <h2 align="center">Create new transaction</h2>
+      <form method="post">
+        {% csrf_token %}
+          <table style="padding: 10px;"> 
+            <tr>
+              <td>
+                <label>To address </label>
+              </td>
+              <td>
+                {{ form.to_address }} <br>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label>Amount </label>
+              </td>
+              <td>
+                {{ form.amount }}
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">
+                <label>Message </label>
+              </td>
+              <td>
+                {{ form.message }}
+              </td>
+            </tr>
+          </table>
+        <button type="submit" class="submit_tx_button">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="address_book_div">
+    <h2 align="center">Address book</h2>
+    <table>
+      <tr>
+        <th>Address</th>
+        <th>Balance</th>
+     </tr>
+    {% for acc in accounts %}
+      <tr> 
+        <td> {{acc.address}} </td>
+        <td> {{acc.get_balance}} </td>
+      </tr>
+    {% endfor %}
+    </table>
   </div>
 {% endblock %}

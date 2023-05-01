@@ -40,7 +40,11 @@ def transactions(request):
             return redirect('transactions')
      else:
           form = TxForm()
-     return render(request, 'transactions.html', {'form': form})
+     context = {
+          'form': form,
+          'accounts': Account.objects.all(),
+          }
+     return render(request, 'transactions.html', context)
 
 def blockchain(request):
      """
@@ -67,6 +71,8 @@ def blockchain(request):
           "blocks": blocks,
           "form": form,
           "blocks_in_row": 4,
+          "txs_in_row": 3,
+          "pending_tx_in_row": 5,
           "full_txs": Tx.objects.filter(executed=False),
           }
      return render(request, 'blockchain.html', context)

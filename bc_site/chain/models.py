@@ -61,6 +61,7 @@ class Tx(models.Model):
     amount = models.FloatField(default='0')
     executed = models.BooleanField(default=False)
     tx_type = models.CharField(max_length=64, default='ordinary')
+    message = models.TextField(max_length=512, default='None')
     
     def __str__(self):
         return "Tx No. " + str(self.id)

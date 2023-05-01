@@ -7,23 +7,42 @@
   <div class="center">
     <form method="post">
       {% csrf_token %}
-      <div>
-        <label>Username:</label>
-        {{ form.username }}
-      </div>
-      <div>
-        <label>Email:</label>
-        {{ form.email }}
-      </div>
-      <div>
-        <label>Password:</label>
-        {{ form.password1 }}
-      </div>
-      <div>
-        <label>Repeat Password:</label>
-        {{ form.password2 }}
-        <!-- {{ form.test }}
-        {{ form.address }} -->
+      <div class="create_acc_div">
+        <table style="padding-bottom: 20px;"> 
+          <tr>
+            <td>
+              <label>Username</label>
+            </td>
+            <td>
+              {{ form.username }} <br>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>Email </label>
+            </td>
+            <td>
+              {{ form.email }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>Password </label>
+            </td>
+            <td>
+              {{ form.password1 }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>Repeat Password </label>
+            </td>
+            <td>
+              {{ form.password2 }}
+            </td>
+          </tr>
+        </table>
+        <button class="submit_tx_button" type="submit">Register</button>
       </div>
       {% if form.errors %}
         {% for field in form %}
@@ -32,7 +51,7 @@
         {% endfor %}
         <!-- {{ form.non_field_errors }} -->
       {% endif %}
-      <button type="submit">Register</button>
+      
     </form>
   </div>
   <!-- message of creating an account -->

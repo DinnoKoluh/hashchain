@@ -1,5 +1,5 @@
 .block-container {
-  background-color: #f1f1f1;
+  background-color: #0c5312;
   border: 2px solid #008CBA;
   width: 20vw;
   height: 300px;
@@ -7,41 +7,10 @@
   text-align: center;
   border-radius: 10px;
   margin-top:1px;
-}
-
-.mine_block_button{
-  background-color: #ba3b00;; 
-  border: none;
+  padding-left: 15px;
+  padding-right: 15px;
   color: white;
-  padding: 10px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 1px 1px;
-  cursor: pointer;
-  border-radius: 4px;
 }
-
-.tx_button {
-  position: relative;
-  background-color: #008CBA; 
-  border: none;
-  color: white;
-  padding: 10px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 1px 1px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-  /* .tx_button:active{
-    background-color: rgb(238, 80, 7);
-    
-    } */
 
 .block_space_under {
   padding-bottom: 2em;

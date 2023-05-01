@@ -21,16 +21,16 @@ class SignUpForm(forms.ModelForm):
         return user
 
     username = forms.CharField(widget=forms.TextInput(attrs={
-        'placeholder': 'Your username'
+        'placeholder': 'Your username', 'size': 30,
     }))
     email = forms.CharField(widget=forms.EmailInput(attrs={
-        'placeholder': 'Your email address'
+        'placeholder': 'Your email address', 'size': 30,
     }))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'placeholder': 'Your password'
+        'placeholder': 'Your password', 'size': 30,
     }))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'placeholder': 'Repeat password',
+        'placeholder': 'Repeat password', 'size': 30,
     }))
 
 class LogInForm(AuthenticationForm):
@@ -45,9 +45,9 @@ class LogInForm(AuthenticationForm):
 class TxForm(forms.ModelForm):
     class Meta:
         model = Tx
-        fields = ('to_address', 'amount')
+        fields = ('to_address', 'amount', 'message')
     to_address = forms.CharField(widget=forms.TextInput(attrs={
-        'placeholder': 'Input address', 'cols': 100, 'rows': 20
+        'placeholder': 'Input address', 'cols': 100, 'rows': 20, 'size': 80
     }))
 
 class BlockForm(forms.ModelForm):
