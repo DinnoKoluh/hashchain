@@ -1,14 +1,14 @@
 .block-container {
-  background-color: #0c5312;
-  border: 2px solid #008CBA;
+  background-color: #48964f;
+  border: 2px solid #095816;
   width: 20vw;
   height: 300px;
   margin: 15px;
   text-align: center;
   border-radius: 10px;
   margin-top:1px;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
   color: white;
 }
 
@@ -34,7 +34,7 @@
 
 div.hash_overflow {
   white-space: nowrap; 
-  width: 18vw; 
+  width: 20vw; 
   overflow: hidden;
   text-overflow: ellipsis; 
   line-height: 10px;

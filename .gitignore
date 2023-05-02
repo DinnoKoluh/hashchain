@@ -1,4 +1,5 @@
 *bc_venv
+*venv
 *__pycache__
 unused.py
 *.vscode

@@ -57,13 +57,14 @@ def blockchain(request):
             raise forms.ValidationError("Cannot mine empty block. Wait for Tx's.")
         if form.is_valid():
           block = form.save(commit=False)
+          block.miner_address = request.user.account.address # look at the case when more accounts mine a block at the same time
           block.save()
           block.add_txs()
-          request.user.account.increase_balance(block.reward)
+          #request.user.account.increase_balance(block.reward)
           block.execute_txs()
           request.user.save()
           block.save()
-          return redirect('blockchain')
+          return redirect('blockchain') 
      else:
          form = BlockForm()
 

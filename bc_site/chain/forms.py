@@ -4,10 +4,8 @@ from django.contrib.auth.models import User
 from .models import Account, Tx, Block
 
 class SignUpForm(forms.ModelForm):
-#class SignUpForm(UserCreationForm):
     class Meta:
         model = Account
-        #model = User
         fields = ('username', 'email', 'password1', 'password2') #, 'address', 'test')
     
     # https://stackoverflow.com/questions/34849328/extending-usercreationform-password-not-saved
@@ -43,11 +41,14 @@ class LogInForm(AuthenticationForm):
     }))
 
 class TxForm(forms.ModelForm):
+    """
+    Form for submitting tx's.
+    """
     class Meta:
         model = Tx
         fields = ('to_address', 'amount', 'message')
     to_address = forms.CharField(widget=forms.TextInput(attrs={
-        'placeholder': 'Input address', 'cols': 100, 'rows': 20, 'size': 80
+        'placeholder': 'Input address', 'size': 80, 'maxlength': 64,
     }))
 
 class BlockForm(forms.ModelForm):
@@ -61,5 +62,4 @@ class BlockForm(forms.ModelForm):
         required=False,
         queryset=Tx.objects.filter(executed=False),
         widget=forms.CheckboxSelectMultiple,
-        #choices=[True, True]
     )

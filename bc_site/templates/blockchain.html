@@ -8,37 +8,48 @@
 {% block content %}
 {% comment %} <img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" width="100" height="100">{% endcomment %}
 
-<div>
+
     {% if request.user.is_authenticated %}
         <div>
-        
             <h1 align="center"> Mine a block </h1>
             <h4 align="center">Pending Transactions</h4>
-            <table class="center_table" style="border: 1px solid black"> 
-                <tbody>
-                {%  for form_tx, tx in form.txs|zip:full_txs %}
-                    {% if forloop.counter0|divisibleby:pending_tx_in_row %}
-                        <tr class="space_under">
-                    {% endif %} 
-                    <td class="tx_space_under"> 
-                        {% comment %} {{ form_tx }} {% endcomment %}
-                        {% include "to_extend.html" %}
-                    </td>
-                    {% if forloop.counter|divisibleby:pending_tx_in_row %}
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                </tbody> 
-            </table>
+
+            {% if form.txs|length > 0 %}
+            <div class="pending_tx_div">
+                <table class="center_table"> 
+                    <tbody>
+                    {%  for form_tx, tx in form.txs|zip:full_txs %}
+                        {% if forloop.counter0|divisibleby:pending_tx_in_row %}
+                            <tr class="space_under">
+                        {% endif %} 
+                        <td class="tx_space_under"> 
+                            {% comment %} {{ form_tx }} {% endcomment %}
+                            {% include "to_extend.html" %}
+                        </td>
+                        {% if forloop.counter|divisibleby:pending_tx_in_row %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody> 
+                </table>
+            </div>
+            {% endif %}
             <form align="center" method="post">
                 {% csrf_token %}
                 <button align="center" type="submit" class="mine_block_button">Mine Block</button>
+                {% if form.errors %}
+                {% for field in form %}
+                  {{ field.name }}
+                  {{ field.errors }}
+                {% endfor %}
+                <!-- {{ form.non_field_errors }} -->
+              {% endif %}
             </form>
         </div>
     {% endif %}
     
 
-
+<div>
     <h1 align="center"> The Blockchain </h1>
     <table class="center_table">
         {% for block in blocks %}
@@ -52,7 +63,8 @@
                     <div class="hash_overflow"> 
                         <font size="1">Hash: {{block.hash}} </font><br>
                         <font size="1">Previous hash: {{block.previous_hash}}</font><br>
-                        <font size="1">Timestamp: {{block.timestamp}}</font>
+                        <font size="1">Timestamp: {{block.timestamp}}</font><br>
+                        <font size="1">Miner: {{block.miner_address}}</font>
                     </div>
                     
                     <table class="center_table">

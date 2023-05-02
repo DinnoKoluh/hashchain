@@ -1,7 +1,12 @@
 .popup {
     position: relative;
     display: inline-block;
-    z-index: 9999;
+    background-color: #008CBA; 
+    margin: 3px;
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 15px;
+    cursor: pointer;
   }
 
   .popup .popuptext {
@@ -15,8 +20,8 @@
     position: absolute;
     z-index: 1;
     bottom: 125%;
-    left: -50%;
-    margin-left: -150px;
+    left: 0%;
+    margin-left: -170px;
   }
 
   /* Popup arrow */

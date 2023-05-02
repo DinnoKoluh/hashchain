@@ -1,0 +1,66 @@
+.create_tx_div {
+    margin: auto;
+    margin-left: 0;
+    padding-bottom: 10px;
+    /* background-color: #447541; */
+    background-image: linear-gradient(to bottom right, rgb(71, 71, 58), rgb(225, 245, 225));
+    margin-bottom: 50px;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  
+.create_acc_div {
+    margin: auto;
+    width: 30%;
+    padding: 20px;
+    background-color: #447541;
+    margin-bottom: 50px;
+  }
+  
+.account_info_div {
+    margin: auto;
+    margin-left: 0;
+    padding: 10px;
+    background-color: #447541;
+    margin-bottom: 20px;
+    color: #fff;
+    border-radius: 10px;
+  }
+  
+.tx_left_div{
+    margin: 10px;
+    float: left; 
+    width:auto;
+    height:auto;
+  }
+  
+.address_book_div{
+    background-color: #2a2f75;
+    margin: 10px;
+    width:45%;
+    height:auto;
+    float: right;
+    border-radius: 10px;
+    padding: 10px;
+    border: 0;
+  }
+  
+div.address_book_div td,
+div.address_book_div table, 
+div.address_book_div th {
+    border: 1px solid white; 
+    border-collapse: collapse;
+  }
+
+.pending_tx_div{
+  position: relative;
+  background-color: #23a555;
+  border: 2px solid #267934;
+  margin: auto;
+  margin-bottom: 10px;
+  width: 25%;
+  height:auto;
+  border-radius: 10px;
+  padding: 10px;
+}
