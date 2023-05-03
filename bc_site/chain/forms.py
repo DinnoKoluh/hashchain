@@ -51,6 +51,10 @@ class TxForm(forms.ModelForm):
         'placeholder': 'Input address', 'size': 80, 'maxlength': 64,
     }))
 
+    amount = forms.FloatField(widget=forms.TextInput(attrs={
+        'placeholder': '0',
+    }))
+
 class BlockForm(forms.ModelForm):
     """
     Mining block, doesn't need any fields, just the mining.

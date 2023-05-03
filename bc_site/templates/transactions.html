@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% load static %} 
+{% load chain_extras %}
 <!-- static files need to be loaded again -->
 {% block title %} | Transactions {% endblock %}
 {% block content %}
-{% comment %} <h1 align="center">Create Transactions</h1> {% endcomment %}
+
 
   <div class="tx_left_div">
     <div class="account_info_div">
@@ -11,6 +12,7 @@
       <h4> My username: {{ user.username }} </h4>
       <h4> My address: {{ user.account.address }}</h4>
       <h4> My balance is: {{ user.account.get_balance }} </h4>
+      <h4> Available funds: {{ user.account.get_balance|subtract:user.account.pending_amount }} </h4>
     </div>
     <div class="create_tx_div"> 
       <h2 align="center">Create new transaction</h2>
@@ -30,7 +32,10 @@
                 <label>Amount </label>
               </td>
               <td>
-                {{ form.amount }}
+                {% comment %} when inspecting element you can see that the id is "id_amount" form.amount {% endcomment %}
+                  {{ form.amount }} 
+                  <input type="hidden" id="fee" value="{{fee}}"> </span>
+                  <span> (Estimated amount including fees: </span> <span id="amount_with_fee"> </span> <span>)</span>
               </td>
             </tr>
             <tr>
@@ -63,3 +68,10 @@
     </table>
   </div>
 {% endblock %}
+
+{% comment %} <script> 
+  document.getElementById("amount").addEventListener("input", function() {
+    document.getElementById("amount_with_fee").innerHTML = 5;
+    console.log("triggered");
+  });
+</script> {% endcomment %}

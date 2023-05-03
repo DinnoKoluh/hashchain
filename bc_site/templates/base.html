@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-{% load static %}
-<link rel="stylesheet" href="{% static "css/style.css"%}">
-<link rel="stylesheet" href="{% static "css/tx_popup.css"%}">
-<link rel="stylesheet" href="{% static "css/block_tx_design.css"%}">
-<link rel="stylesheet" href="{% static "css/buttons.css"%}">
-<link rel="stylesheet" href="{% static "css/divs.css"%}">
-<script src="{% static 'js/bcScript.js' %}"></script>
-
+<html>
 <!-- loading static files here with template tagging -->
 <!-- to refresh css in the browser press ctrl+F5 -->
-
   <head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/style.css"%}">
+    <link rel="stylesheet" href="{% static "css/tx_popup.css"%}">
+    <link rel="stylesheet" href="{% static "css/block_tx_design.css"%}">
+    <link rel="stylesheet" href="{% static "css/buttons.css"%}">
+    <link rel="stylesheet" href="{% static "css/divs.css"%}">
+    <script src="{% static 'js/bcScript.js' %}"></script>
+
     <meta charset="utf-8">
     <title> BlockChain {% block title %} {% endblock %} </title>
     <link rel="stylesheet" href="{% static "css/toolbar_style.css"%}">
@@ -32,22 +32,19 @@
       </nav>
     </header>
     
+
+    {% block content %}
+      <h1> Welcome Home.</h1>
+      {% if request.user.is_authenticated %}
+        <h2> This account belongs to: {{ user.username }} </h2>
+        <h3> My address is: {{ user.account.address }}</h3>
+        <h3> My current balance is: {{ user.account.get_balance }} </h3>
+      {% endif %}
+      <img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" width="400" height="500">
+      <p> This page contains some basic info about this project. </p>
+    {% endblock %}
   </body>
-
-{% block content %}
-<body>
-  <h1> Welcome Home.</h1>
-  {% if request.user.is_authenticated %}
-    <h2> This account belongs to: {{ user.username }} </h2>
-    <h3> My address is: {{ user.account.address }}</h3>
-    <h3> My current balance is: {{ user.account.get_balance }} </h3>
-  {% endif %}
-  <img src="{% static "images/running.png" %}" alt="wrong file path name, or picture name" width="400" height="500">
-  <p> This page contains some basic info about this project. </p>
-</body>
-
-{% endblock %}
-
+</html>
 {% comment %} <footer style="border: 1px solid black">
   <p>Author: Dinno Koluh</p>
   <p><a href="https://github.com/DinnoKoluh">GitHub</a></p>

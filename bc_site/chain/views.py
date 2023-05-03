@@ -26,23 +26,23 @@ def transactions(request):
         if form.is_valid():
             tx = form.save(commit=False) # type is the TX model
             given_to_address = form.cleaned_data['to_address']
-
             # checking if the given address is in the database   
             if not(Account.objects.filter(address=given_to_address).exists()):
                raise forms.ValidationError("The given address does not exist")
 
             current_user = request.user.account # getting the current custom user model
             tx.from_address = current_user.address # setting my_address of the tx 
-            # print(tx.my_address)
+            current_user.increase_pending_amount(tx.amount + tx.amount * tx.fee)
             # do any additional processing of the form data here
-            # print(AccountModel.objects.all()[0]) # getting all the associated data
             tx.save()
+            current_user.save()
             return redirect('transactions')
      else:
           form = TxForm()
      context = {
           'form': form,
           'accounts': Account.objects.all(),
+          'fee': 0.01, #Tx.objects.all()[0].fee,
           }
      return render(request, 'transactions.html', context)
 
@@ -98,11 +98,7 @@ def account_base(request):
      """
      Where the account site will be located.
      """
-
-     context = {
-            "username":"dinnoK",
-            }
-     return render(request, 'account_base.html', context)
+     return render(request, 'account_base.html')
 
 @login_required # decorator
 def logout_view(request):

@@ -19,6 +19,7 @@ class Account(User):
     #user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="account", unique=True)
     address = models.CharField(max_length=64, default="00000000000000000000000000000000", editable=False)
     balance = models.FloatField(max_length=5, default='0', editable=False)
+    pending_amount = models.FloatField(max_length=5, default='0', editable=False) # amount to be taken out of balance when tx's is executed
     
     class Meta:
         verbose_name = "Accounts Model"
@@ -49,6 +50,20 @@ class Account(User):
         self.balance = self.balance - amount
         self.save()
         return True
+    
+    def increase_pending_amount(self, amount):
+        self.pending_amount = self.pending_amount + amount
+        if self.pending_amount > self.balance:
+            raise Exception("Not enough funds!")
+        self.save()
+        return True
+    
+    def decrease_pending_amount(self, amount):
+        self.pending_amount = self.pending_amount - amount
+        self.save()
+        return True
+    
+    
 
 class Tx(models.Model):
     """
@@ -60,7 +75,7 @@ class Tx(models.Model):
     executed = models.BooleanField(default=False)
     tx_type = models.CharField(max_length=64, default='ordinary')
     message = models.TextField(max_length=512, default='None')
-    fee = models.FloatField(default=0.01, editable=False)
+    fee = models.FloatField(default=0.01)
     
     def __str__(self):
         return "Tx No. " + str(self.id)
@@ -72,6 +87,8 @@ class Tx(models.Model):
         if self.tx_type == "ordinary":
             # decrease balance by amount + the fee percentage which will be added to the miner
             Account.objects.filter(address=self.from_address)[0].decrease_balance(self.amount + self.amount * self.fee)
+            # when tx is executed decrease the pending amount by that amount
+            Account.objects.filter(address=self.from_address)[0].decrease_pending_amount(self.amount + self.amount * self.fee)
             Account.objects.filter(address=self.to_address)[0].increase_balance(self.amount)
             self.executed = True
         return True
