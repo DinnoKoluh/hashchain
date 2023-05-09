@@ -9,17 +9,30 @@ sys.path.append('C:\\Users\\pc\\Desktop\\MyProjects\\my_blockchain')
 # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy
+
 import hashlib
 import time
 from datetime import datetime
+import math
+
+def validate_amount(value):
+    print("The value is:" + str(value))
+    if value < 1 or not(isinstance(value, int)):
+        print("inside validate 2")
+        raise ValidationError(
+            gettext_lazy("%(value)s is not has to be a positive integer greater than 0!"),
+            params={"value": value},
+        )
 
 class Account(User):
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'address'
     #user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="account", unique=True)
     address = models.CharField(max_length=64, default="00000000000000000000000000000000", editable=False)
-    balance = models.FloatField(max_length=5, default='0', editable=False)
-    pending_amount = models.FloatField(max_length=5, default='0', editable=False) # amount to be taken out of balance when tx's is executed
+    balance = models.IntegerField(default='0', editable=False)
+    pending_amount = models.IntegerField(default='0', editable=False) # amount to be taken out of balance when tx's is executed
     
     class Meta:
         verbose_name = "Accounts Model"
@@ -52,9 +65,9 @@ class Account(User):
         return True
     
     def increase_pending_amount(self, amount):
-        self.pending_amount = self.pending_amount + amount
-        if self.pending_amount > self.balance:
+        if self.pending_amount + amount > self.balance:
             raise Exception("Not enough funds!")
+        self.pending_amount = self.pending_amount + amount
         self.save()
         return True
     
@@ -71,7 +84,7 @@ class Tx(models.Model):
     """
     from_address = models.CharField(max_length=64, default='0000000', editable=False)
     to_address = models.CharField(max_length=64, default='0000000')
-    amount = models.FloatField(default='0')
+    amount = models.IntegerField(default='0', validators=[validate_amount])
     executed = models.BooleanField(default=False)
     tx_type = models.CharField(max_length=64, default='ordinary')
     message = models.TextField(max_length=512, default='None')
@@ -86,12 +99,18 @@ class Tx(models.Model):
         """
         if self.tx_type == "ordinary":
             # decrease balance by amount + the fee percentage which will be added to the miner
-            Account.objects.filter(address=self.from_address)[0].decrease_balance(self.amount + self.amount * self.fee)
+            Account.objects.filter(address=self.from_address)[0].decrease_balance(self.amount + self.get_fee())
             # when tx is executed decrease the pending amount by that amount
-            Account.objects.filter(address=self.from_address)[0].decrease_pending_amount(self.amount + self.amount * self.fee)
+            Account.objects.filter(address=self.from_address)[0].decrease_pending_amount(self.amount + self.get_fee())
             Account.objects.filter(address=self.to_address)[0].increase_balance(self.amount)
             self.executed = True
         return True
+    
+    def get_fee(self):
+        # make sure that transactions under 100 have a fee of 1
+        if self.amount < 100:
+            return 1
+        return math.floor(self.amount * self.fee) + 1
 
 class Block(models.Model):
     total_fee = models.FloatField(default=0, editable=False)
@@ -131,7 +150,7 @@ class Block(models.Model):
         Executing the pending tx's inside the block.
         """
         for tx in self.get_txs():
-            self.total_fee = self.total_fee + tx.fee * tx.amount    # calculating total fee of all tx in the block
+            self.total_fee = self.total_fee + tx.get_fee()    # calculating total fee of all tx in the block
             tx.execute_tx()
             tx.save()
         # after the txs in a block are executed reward the miner

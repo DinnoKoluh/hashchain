@@ -18,7 +18,8 @@
     margin-bottom: 50px;
   }
   
-.account_info_div {
+.account_info_div,
+.account_info_div-base {
     margin: auto;
     margin-left: 0;
     padding: 10px;
@@ -27,7 +28,12 @@
     color: #fff;
     border-radius: 10px;
   }
-  
+
+.account_info_div-base {
+  margin-left: 5px;
+  width: 50%;
+}
+
 .tx_left_div{
     margin: 10px;
     float: left; 

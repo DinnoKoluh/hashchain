@@ -11,8 +11,8 @@
 
     {% if request.user.is_authenticated %}
         <div class="mine_block_div">
-            <h1 align="center"> Mine a block </h1>
-            <h4 align="center">Pending Transactions</h4>
+            <h2 align="center" style="margin-bottom: 0px;"> Mine a block </h2>
+            <h4 align="center" style="margin-top: 10px;">Pending Transactions</h4>
 
             {% if form.txs|length > 0 %}
             <div class="pending_tx_div">
@@ -24,7 +24,7 @@
                         {% endif %} 
                         <td class="tx_space_under"> 
                             {% comment %} {{ form_tx }} {% endcomment %}
-                            {% include "to_extend.html" %}
+                            {% include "extensions/tx_popup_info.html" %}
                         </td>
                         {% if forloop.counter|divisibleby:pending_tx_in_row %}
                             </tr>
@@ -44,7 +44,18 @@
                 {% endfor %}
                 <!-- {{ form.non_field_errors }} -->
               {% endif %}
+              {% if form.txs|length > 0 %}
+                <p> Estimated reward: {{ total_reward }}</p>
+              {% endif %}
             </form>
+            {% for message in messages %}
+                {% if message.tags == 'success' %} 
+                <div class="success-msg">
+                    <i class="fa fa-check"></i>
+                    {{ message }}
+                </div>  
+                {% endif %} 
+            {% endfor %}
         </div>
     {% endif %}
     
@@ -76,7 +87,7 @@
                         https://docs.djangoproject.com/en/4.1/ref/templates/builtins/
                         {% endcomment %}
                         <td class="tx_space_under">
-                            {% include "to_extend.html" %} 
+                            {% include "tx_popup_info.html" %} 
                         </td>
                         {% if forloop.counter|divisibleby:txs_in_row %}
                             <tr>

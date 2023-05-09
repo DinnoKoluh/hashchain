@@ -47,12 +47,15 @@ class TxForm(forms.ModelForm):
     class Meta:
         model = Tx
         fields = ('to_address', 'amount', 'message')
+        widgets = {
+          'message': forms.Textarea(attrs={'rows':4, 'cols':75}),
+        }
     to_address = forms.CharField(widget=forms.TextInput(attrs={
         'placeholder': 'Input address', 'size': 80, 'maxlength': 64,
     }))
 
     amount = forms.FloatField(widget=forms.TextInput(attrs={
-        'placeholder': '0',
+        'placeholder': '0', 'min':'1', 'type': 'number', 'oninput':"validity.valid||(value='');",
     }))
 
 class BlockForm(forms.ModelForm):

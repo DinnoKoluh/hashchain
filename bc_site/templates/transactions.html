@@ -8,11 +8,7 @@
 
   <div class="tx_left_div">
     <div class="account_info_div">
-      <h2 align="center">Account information</h2>
-      <h4> My username: {{ user.username }} </h4>
-      <h4> My address: {{ user.account.address }}</h4>
-      <h4> My balance is: {{ user.account.get_balance }} </h4>
-      <h4> Available funds: {{ user.account.get_balance|subtract:user.account.pending_amount }} </h4>
+      {% include "extensions/account_info.html" %}
     </div>
     <div class="create_tx_div"> 
       <h2 align="center">Create new transaction</h2>
@@ -35,7 +31,7 @@
                 {% comment %} when inspecting element you can see that the id is "id_amount" form.amount {% endcomment %}
                   {{ form.amount }} 
                   <input type="hidden" id="fee" value="{{fee}}"> </span>
-                  <span> (Estimated amount including fees: </span> <span id="amount_with_fee"> </span> <span>)</span>
+                  <span> (Estimated amount including fees: </span> <span id="amount_with_fee"></span><span>)</span>
               </td>
             </tr>
             <tr>
@@ -48,13 +44,28 @@
             </tr>
           </table>
         <button type="submit" class="submit_tx_button">Submit</button>
+        {% if error %}
+          <div class="error-msg">
+            <i class="fa fa-warning"></i>
+            {{ error }}
+        </div>
+        {% endif %}
       </form>
+
+      {% for message in messages %}
+        {% if message.tags == 'success' %} 
+        <div class="success-msg">
+          <i class="fa fa-check"></i>
+          {{ message }}
+        </div>  
+        {% endif %} 
+      {% endfor %}
     </div>
   </div>
 
   <div class="address_book_div">
     <h2 align="center">Address book</h2>
-    <table>
+    <table class="center_table">
       <tr>
         <th>Address</th>
         <th>Balance</th>
@@ -68,10 +79,3 @@
     </table>
   </div>
 {% endblock %}
-
-{% comment %} <script> 
-  document.getElementById("amount").addEventListener("input", function() {
-    document.getElementById("amount_with_fee").innerHTML = 5;
-    console.log("triggered");
-  });
-</script> {% endcomment %}

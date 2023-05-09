@@ -1,0 +1,7 @@
+{% load chain_extras %}
+
+<h2 align="center">Account information</h2>
+<h4> My username: {{ user.username }} </h4>
+<h4> My address: {{ user.account.address }}</h4>
+<h4> My balance is: {{ user.account.get_balance }} </h4>
+<h4> Available funds: {{ user.account.get_balance|subtract:user.account.pending_amount }} </h4>

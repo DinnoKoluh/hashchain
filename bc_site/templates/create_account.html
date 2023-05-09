@@ -43,6 +43,15 @@
           </tr>
         </table>
         <button class="submit_tx_button" type="submit">Register</button>
+        {% for message in messages %}
+          {% if message.tags == 'success' %} 
+          {% comment %} <a href="{% url 'login'%}"> LogIn </a> {% endcomment %}
+          <div class="success-msg">
+              <i class="fa fa-check"></i>
+              {{ message }}
+          </div>  
+          {% endif %} 
+        {% endfor %}
       </div>
       {% if form.errors %}
         {% for field in form %}
