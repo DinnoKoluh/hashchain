@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .forms import SignUpForm, TxForm, BlockForm
@@ -7,10 +7,13 @@ from .models import Block, Account, Tx
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django import forms
-import sys
-import traceback
-sys.path.append('C:\\Users\\pc\\Desktop\\MyProjects\\my_blockchain\\vanilla_classes')
-import Net
+from .key_generation import *
+from django.conf import settings
+import os
+import time
+import asyncio
+import urllib.request
+from threading import Timer
 
 def base(request):
      """
@@ -92,18 +95,32 @@ def create_account(request):
      """
      Where the account creation site will be located.
      """
-     if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-          account_user = form.save(commit=False)
-          acc = Net.Account() # temporary create acc here to extract the address, needs to fixed later
-          account_user.address = acc.address
-          account_user.save()
-          messages.success(request, "Successfully created account!")
-          return redirect('create_account')
+     key_path = "#"
+     if request.method == 'POST' and "register_btn" in request.POST:
+          reg_form = SignUpForm(request.POST)
+          if reg_form.is_valid():
+               key_pair = generate_keys()
+               account_user = reg_form.save(commit=False)
+               account_user.address = generate_address(key_pair)
+               account_user.save()
+               key_path = os.path.join(settings.BASE_DIR, 'static', 'key', account_user.address)
+               save_key(key_pair, key_path) # saving key in a temporary file
+               messages.success(request, "Successfully created account!")
+               t = Timer(10, delete_key, args=(key_path, ))
+               t.start()
+               return render(request, 'create_account.html', {'form': SignUpForm(), 'key_path': str("/static/key/") + str(account_user.address)})
+          else:
+               return redirect('create_account')
      else:
-         form = SignUpForm()
-     return render(request, 'create_account.html', {'form': form})
+         reg_form = SignUpForm()
+     return render(request, 'create_account.html', {'form': reg_form, 'key_path': key_path})
+
+def delete_key(key_path):
+     """
+     Delete key file after is has been downloaded.
+     """
+     os.remove(key_path)
+     print("Key successfully deleted")
 
 @login_required # decorator
 def logout_view(request):
@@ -121,3 +138,4 @@ def estimate_reward():
      for tx in Tx.objects.filter(executed=False):
           total_reward = total_reward + tx.get_fee()
      return total_reward
+

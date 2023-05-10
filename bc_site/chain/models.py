@@ -1,14 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser # user model
 import sys
-# FIX: change from absolute to relative path
-sys.path.append('C:\\Users\\pc\\Desktop\\MyProjects\\my_blockchain')
-# from BC import *
-# from Net import *
-# from Tx import *
 # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy
 
@@ -18,9 +11,7 @@ from datetime import datetime
 import math
 
 def validate_amount(value):
-    print("The value is:" + str(value))
     if value < 1 or not(isinstance(value, int)):
-        print("inside validate 2")
         raise ValidationError(
             gettext_lazy("%(value)s is not has to be a positive integer greater than 0!"),
             params={"value": value},

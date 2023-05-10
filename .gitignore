@@ -6,3 +6,4 @@ unused.py
 *.sqlite3
 *.png
 TODO.txt
+test.ipynb

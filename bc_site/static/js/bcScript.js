@@ -18,7 +18,9 @@ window.onload = function() {
             else document.getElementById("amount_with_fee").innerHTML = null;
         });
     }
-    else {
-        console.log("null element")
-    }
+}
+
+window.download_file = function() {
+    console.log("dowload file js")
+    document.getElementById("download-link").click();
 }

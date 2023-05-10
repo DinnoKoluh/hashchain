@@ -5,71 +5,67 @@
 {% block content %}
 <h1 align="center">Register</h1>
   <div class="center">
-    <form method="post">
-      {% csrf_token %}
-      <div class="create_acc_div">
-        <table style="padding-bottom: 20px;"> 
-          <tr>
-            <td>
-              <label>Username</label>
-            </td>
-            <td>
-              {{ form.username }} <br>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label>Email </label>
-            </td>
-            <td>
-              {{ form.email }}
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label>Password </label>
-            </td>
-            <td>
-              {{ form.password1 }}
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label>Repeat Password </label>
-            </td>
-            <td>
-              {{ form.password2 }}
-            </td>
-          </tr>
-        </table>
-        <button class="submit_tx_button" type="submit">Register</button>
-        {% for message in messages %}
-          {% if message.tags == 'success' %} 
-          {% comment %} <a href="{% url 'login'%}"> LogIn </a> {% endcomment %}
-          <div class="success-msg">
-              <i class="fa fa-check"></i>
-              {{ message }}
-          </div>  
-          {% endif %} 
-        {% endfor %}
-      </div>
-      {% if form.errors %}
+    <div class="create_acc_div">
+      <form method="post" action="{% url 'create_account'%}">
+          {% csrf_token %}
+          <table style="padding-bottom: 20px;"> 
+            <tr>
+              <td>
+                <label>Username</label>
+              </td>
+              <td>
+                {{ form.username }} <br>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label>Email </label>
+              </td>
+              <td>
+                {{ form.email }}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label>Password </label>
+              </td>
+              <td>
+                {{ form.password1 }}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label>Repeat Password </label>
+              </td>
+              <td>
+                {{ form.password2 }}
+              </td>
+            </tr>
+          </table>
+          <button name="register_btn" class="submit_tx_button" type="submit" target="_blank">Register</button>
+          {% for message in messages %}
+            {% if message.tags == 'success' %} 
+            {% comment %} <a href="{% url 'login'%}"> LogIn </a> {% endcomment %}
+            <div class="success-msg" onload="downloadFile()">
+                <i class="fa fa-check"></i>
+                {{ message }}
+                {% comment %} <script src="{% static 'js/bcScript.js' %}"></script> {% endcomment %}
+                <body onload="download_file()">
+                <a href="{{ key_path }}" download id="download-link" style="display:none">Download File</a>
+                </body>
+            </div>  
+            {% endif %}
+          {% endfor %}
+      </form> 
+          <p> As soon as you create an account a file containing the private key will be automatically downloaded on
+            your computer. The file is not stored. You have the only copy of the file. Keep it safe!
+          </p>
+    </div>
+  </div>
+{% endblock %}
+      {% comment %} {% if form.errors %}
         {% for field in form %}
           {{ field.name }}
           {{ field.errors }}
         {% endfor %}
-        <!-- {{ form.non_field_errors }} -->
-      {% endif %}
-      
-    </form>
-  </div>
-  <!-- message of creating an account -->
-  <!-- {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <b{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</b> <br>
-      {% endfor %}
-  </ul>
-  {% endif %} -->
-
-{% endblock %}
+      {% endif %} {% endcomment %}
