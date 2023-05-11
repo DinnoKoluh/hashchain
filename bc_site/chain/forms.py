@@ -45,7 +45,7 @@ class TxForm(forms.ModelForm):
     """
     class Meta:
         model = Tx
-        fields = ('to_address', 'amount', 'message')
+        fields = ('to_address', 'amount', 'message', 'file')
         widgets = {
           'message': forms.Textarea(attrs={'rows':4, 'cols':75}),
         }
@@ -56,6 +56,7 @@ class TxForm(forms.ModelForm):
     amount = forms.FloatField(widget=forms.TextInput(attrs={
         'placeholder': '0', 'min':'1', 'type': 'number', 'oninput':"validity.valid||(value='');",
     }))
+    file = forms.FileField()
 
 class BlockForm(forms.ModelForm):
     """

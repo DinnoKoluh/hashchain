@@ -16,7 +16,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = Path(BASE_DIR, "templates") # join paths
-print(TEMPLATE_DIR)
 STATIC_DIR = Path(BASE_DIR, "static")
 
 # Quick-start development settings - unsuitable for production

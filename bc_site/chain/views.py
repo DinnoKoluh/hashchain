@@ -29,7 +29,7 @@ def transactions(request):
      form = TxForm()
      try:
           if request.method == 'POST':
-               form = TxForm(request.POST)
+               form = TxForm(request.POST, request.FILES)
           if form.is_valid():
                tx = form.save(commit=False) # type is the TX model
                given_to_address = form.cleaned_data['to_address']
@@ -39,10 +39,15 @@ def transactions(request):
                else: 
                     current_user = request.user.account # getting the current custom user model
                     tx.from_address = current_user.address # setting my_address of the tx 
-                    current_user.increase_pending_amount(tx.amount + tx.get_fee())
                     # do any additional processing of the form data here
-                    tx.save()
+                    private_key = load_secret_key(request.FILES['file'].read()) # read as bytes object and load as private key object
+                    tx.public_key = get_public_key_as_bytes(private_key)
+                    tx.is_tx_owner_valid(private_key) # validate account
+                    current_user.increase_pending_amount(tx.amount + tx.get_fee())
                     current_user.save()
+                    tx.save()
+                    tx.sign_tx(private_key)
+                    messages.success(request, "Transaction successfully signed")
                     messages.success(request, "Transaction successfully submitted!")
                     return redirect('transactions')
           else:
@@ -61,24 +66,32 @@ def blockchain(request):
      """
      Where the blockchain visualization site will be located.
      """
-     blocks = Block.objects.all()
-     if request.method == 'POST':
-        form = BlockForm(request.POST)
-        if len(Tx.objects.filter(executed=False)) == 0:
-            raise forms.ValidationError("Cannot mine empty block. Wait for Tx's.")
-        if form.is_valid():
-          block = form.save(commit=False)
-          block.miner_address = request.user.account.address # look at the case when more accounts mine a block at the same time
-          block.save()
-          block.add_txs()
-          #request.user.account.increase_balance(block.reward)
-          block.execute_txs()
-          request.user.save()
-          block.save()
-          messages.success(request, "Block successfully mined!")
-          return redirect('blockchain') 
-     else:
-         form = BlockForm()
+     blocks = None
+     form = BlockForm()
+     error = False
+     try:
+          blocks = Block.objects.all()
+          if request.method == 'POST':
+               form = BlockForm(request.POST)
+               if len(Tx.objects.filter(executed=False)) == 0:
+                    raise Exception("Cannot mine empty block. Wait for Tx's.")
+               if form.is_valid():
+                    block = form.save(commit=False)
+                    # check if tx's are valid before mining block
+                    for tx in Tx.objects.filter(executed=False):
+                         tx.is_tx_valid()
+                    block.miner_address = request.user.account.address # look at the case when more accounts mine a block at the same time
+                    block.save()
+                    block.add_txs()
+                    block.execute_txs()
+                    request.user.save() # saving user because of gotten block reward
+                    block.save()
+                    messages.success(request, "Block successfully mined!")
+                    return redirect('blockchain') 
+          else:
+               form = BlockForm()
+     except Exception as e:
+          error = str(e)
 
      context = {
           "blocks": blocks,
@@ -88,6 +101,7 @@ def blockchain(request):
           "pending_tx_in_row": 5,
           "full_txs": Tx.objects.filter(executed=False),
           "total_reward": estimate_reward(),
+          "error": error,
           }
      return render(request, 'blockchain.html', context)
 

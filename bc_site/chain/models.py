@@ -4,6 +4,7 @@ import sys
 # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy
+from .key_generation import *
 
 import hashlib
 import time
@@ -67,8 +68,6 @@ class Account(User):
         self.save()
         return True
     
-    
-
 class Tx(models.Model):
     """
     Model that contains transaction details.
@@ -80,6 +79,8 @@ class Tx(models.Model):
     tx_type = models.CharField(max_length=64, default='ordinary')
     message = models.TextField(max_length=512, default='None')
     fee = models.FloatField(default=0.01)
+    signature = models.BinaryField(default=b'empty_signature')
+    public_key = models.BinaryField(default=b'empty_pk')
     
     def __str__(self):
         return "Tx No. " + str(self.id)
@@ -88,6 +89,7 @@ class Tx(models.Model):
         """
         Executing a tx.
         """
+        self.is_tx_valid()
         if self.tx_type == "ordinary":
             # decrease balance by amount + the fee percentage which will be added to the miner
             Account.objects.filter(address=self.from_address)[0].decrease_balance(self.amount + self.get_fee())
@@ -95,6 +97,55 @@ class Tx(models.Model):
             Account.objects.filter(address=self.from_address)[0].decrease_pending_amount(self.amount + self.get_fee())
             Account.objects.filter(address=self.to_address)[0].increase_balance(self.amount)
             self.executed = True
+        return True
+    
+    def sign_tx(self, key):
+        """
+        Signing tx with the secret(private) key object and saving the signature.
+        """
+        self.signature = key.sign(
+            self.get_tx_hash(),
+            padding.PSS(
+                mgf=padding.MGF1(hashes.SHA256()),
+                salt_length=padding.PSS.MAX_LENGTH
+            ),
+            hashes.SHA256()
+        )
+        self.save() # saving the signature 
+        return True
+
+    def get_tx_hash(self):
+        """
+        Getting the tx hash in bytes format. This will be the data that is actually being signed.
+        """
+        hash_data = str(self.from_address) + str(self.to_address) + str(self.amount) + str(self.message)
+        return bytes(hashlib.sha256(hash_data.encode()).hexdigest(), 'utf-8')
+
+    def is_tx_valid(self):
+        """
+        Check if the tx is actually valid with the use of the public key, signature and tx hash data.
+        """
+        try:
+            publicKey = load_public_key(self.public_key)
+            publicKey.verify(
+                self.signature,
+                self.get_tx_hash(),
+                padding.PSS(
+                    mgf=padding.MGF1(hashes.SHA256()),
+                    salt_length=padding.PSS.MAX_LENGTH
+                ),
+                hashes.SHA256()
+            )
+        except:
+            raise Exception("Invalid Signature!")
+        return True
+    
+    def is_tx_owner_valid(self, key):
+        """
+        Check if the owner of the transaction and the submitted private key match.
+        """
+        if generate_address(key) != self.from_address:
+            raise Exception("Entered wrong private key!")
         return True
     
     def get_fee(self):
@@ -138,7 +189,7 @@ class Block(models.Model):
     
     def execute_txs(self):
         """
-        Executing the pending tx's inside the block.
+        Executing the pending tx's inside the block. When tx's are executed reward miner.
         """
         for tx in self.get_txs():
             self.total_fee = self.total_fee + tx.get_fee()    # calculating total fee of all tx in the block

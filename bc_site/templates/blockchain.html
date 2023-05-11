@@ -37,13 +37,13 @@
             <form align="center" method="post">
                 {% csrf_token %}
                 <button align="center" type="submit" class="mine_block_button">Mine Block</button>
-                {% if form.errors %}
-                {% for field in form %}
-                  {{ field.name }}
-                  {{ field.errors }}
-                {% endfor %}
-                <!-- {{ form.non_field_errors }} -->
-              {% endif %}
+                {% if error %}
+                    <div class="error-msg">
+                    <i class="fa fa-warning"></i>
+                    {{ error }}
+                </div>
+                {% endif %}
+              
               {% if form.txs|length > 0 %}
                 <p> Estimated reward: {{ total_reward }}</p>
               {% endif %}
