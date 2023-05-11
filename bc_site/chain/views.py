@@ -158,8 +158,6 @@ def estimate_reward():
           return None
 
 def genesis(user):
-     blocks = Block.objects.exists()
-     print(blocks)
      if not Block.objects.exists():
           print("GENERATING GENESIS BLOCK")
           block = Block()
