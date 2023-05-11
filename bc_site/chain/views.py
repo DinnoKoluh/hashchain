@@ -120,6 +120,7 @@ def create_account(request):
                key_path = os.path.join(settings.BASE_DIR, 'static', 'key', account_user.address)
                save_key(key_pair, key_path) # saving key in a temporary file
                messages.success(request, "Successfully created account!")
+               genesis(account_user)
                t = Timer(10, delete_key, args=(key_path, ))
                t.start()
                return render(request, 'create_account.html', {'form': SignUpForm(), 'key_path': str("/static/key/") + str(account_user.address)})
@@ -148,8 +149,21 @@ def estimate_reward():
      """
      Return total reward of mining a block.
      """
-     total_reward = Block.objects.all()[0].reward # could be an issue when mining genesis block
-     for tx in Tx.objects.filter(executed=False):
-          total_reward = total_reward + tx.get_fee()
-     return total_reward
+     try:
+          total_reward = Block.objects.all()[0].reward # could be an issue when mining genesis block
+          for tx in Tx.objects.filter(executed=False):
+               total_reward = total_reward + tx.get_fee()
+          return total_reward
+     except:
+          return None
 
+def genesis(user):
+     blocks = Block.objects.exists()
+     print(blocks)
+     if not Block.objects.exists():
+          print("GENERATING GENESIS BLOCK")
+          block = Block()
+          block.miner_address = user.address
+          user.balance = 100
+          user.save()
+          block.save()
