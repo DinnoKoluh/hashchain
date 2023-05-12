@@ -34,9 +34,11 @@
     
 
     {% block content %}
-      <h1> Welcome Home.</h1>
+      <div class="about_hashchain_div">
+          {% include "extensions/README.html"%}
+    </div>
       {% if request.user.is_authenticated %}
-        <div class="account_info_div-base ">
+        <div class="account_info_div-base" style="margin: auto; margin-bottom: 25px;">
         {% include "extensions/account_info.html" %}
         </div>
       {% endif %}

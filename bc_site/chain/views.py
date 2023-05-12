@@ -71,8 +71,9 @@ def blockchain(request):
      error = False
      try:
           blocks = Block.objects.all()
-          if request.method == 'POST':
+          if request.method == 'POST' and 'mine_block' in request.POST:
                form = BlockForm(request.POST)
+               validate_chain() # validate chain hashes and txs inside of them
                if len(Tx.objects.filter(executed=False)) == 0:
                     raise Exception("Cannot mine empty block. Wait for Tx's.")
                if form.is_valid():
@@ -88,6 +89,10 @@ def blockchain(request):
                     block.save()
                     messages.success(request, "Block successfully mined!")
                     return redirect('blockchain') 
+          elif request.method == 'POST' and 'validate_chain' in request.POST:
+               validate_chain()
+               messages.success(request, "Blockchain has been validated!")
+               return redirect('blockchain')
           else:
                form = BlockForm()
      except Exception as e:
@@ -165,3 +170,13 @@ def genesis(user):
           user.balance = 100
           user.save()
           block.save()
+
+def validate_chain():
+     """
+     Validate blockchain by validating tx's in blocks, block hashes and hashes between 
+     consecutive blocks.
+     """
+     for block in Block.objects.all():
+          block.validate_block_txs()
+          if (block.hash != block.calculateHash()):
+                raise Exception(f"Hash of block {block.pk} has been changed!")

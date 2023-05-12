@@ -7,3 +7,5 @@ unused.py
 *.png
 TODO.txt
 test.ipynb
+*node_modules
+*testing

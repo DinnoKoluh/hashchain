@@ -76,3 +76,11 @@ main {
   color: #D8000C;
   background-color: #FFBABA;
 }
+
+.digit {
+  font-size: 20px;
+}
+
+.txt {
+  font-size: 15px;
+}

@@ -137,7 +137,7 @@ class Tx(models.Model):
                 hashes.SHA256()
             )
         except:
-            raise Exception("Invalid Signature!")
+            raise Exception(f"Invalid Signature of Transaction {self.pk}!")
         return True
     
     def is_tx_owner_valid(self, key):
@@ -177,7 +177,7 @@ class Block(models.Model):
         Overriding the save method, so that adding a new block is actually mining a block.
         """
         if self.pk is None:
-            self.mineBlock(difficulty=4)
+            self.mineBlock(difficulty=5)
         return super(Block, self).save(*args, **kwargs)
     
     def add_txs(self):
@@ -211,7 +211,8 @@ class Block(models.Model):
         """
         Calculating the hash of the current block based on the block attributes.
         """
-        hash_data = str(self.previous_hash) + str(self.timestamp) + "-" + str(self.nonce)
+        # bug using a timestamp as the block has not been saved yet so the timestamp used is the default one
+        hash_data = str(self.previous_hash) + str(self.nonce)
         return hashlib.sha256(hash_data.encode()).hexdigest()
     
     def mineBlock(self, difficulty):
@@ -224,4 +225,15 @@ class Block(models.Model):
             self.hash = self.calculateHash()
         end_time = time.time()
         print("Block has been mined successfully! \nTime taken: {}".format(end_time - start_time))
-
+    
+    def validate_block_txs(self):
+        """
+        Check if all tx's in a block are valid.
+        """
+        invalid_tx = 0
+        try:
+            for tx in self.get_txs():
+                invalid_tx = tx.pk
+                tx.is_tx_valid()
+        except Exception as e:
+            raise Exception("Invalid Transaction {} in Block {}!".format(invalid_tx, self.pk) + '\n' + str(e))

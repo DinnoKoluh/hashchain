@@ -36,7 +36,10 @@
             {% endif %}
             <form align="center" method="post">
                 {% csrf_token %}
-                <button align="center" type="submit" class="mine_block_button">Mine Block</button>
+                <button id="mine_block" name="mine_block" align="center" type="submit" class="mine_block_button">Mine Block</button>
+                {% include "extensions/timer.html"%}
+                <script src="{% static 'js/timer_script.js' %}"></script>
+                <button name="validate_chain" align="center" type="submit" class="validate_chain_button">Validate Blockchain</button>
                 {% if error %}
                     <div class="error-msg">
                     <i class="fa fa-warning"></i>

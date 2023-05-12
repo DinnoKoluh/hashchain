@@ -28,16 +28,25 @@ Let us assume that an account has a balance of $X$ and the user submits a transa
 The creation of the `genesis` block is hardcoded such that the first account that is registered to hashchain is by default the genesis block miner. The accounts balance will be set to a predefined value and this is the case only for the first account created, all accounts created after the first one will have a default balance of $0A$. The genesis block is empty by default. Other blocks are not. A block object contains the `previous_hash` (hash of the previous block), `timestamp`, `transaction data`, `miner_address` and the `hash` (their own hash which is calculated from the just mentioned attributes). A block has to have at least one transaction to be able to be mined i.e. empty blocks cannot be mined except the hard-coded genesis block. 
 
 ### Block mining
-Any user can mine a block. To mine a block the miner has to solve a hash puzzle (enforce that the hash of the block data has a certain number of leading zeros, that number is regarded as the `difficulty` of the puzzle). When the miner solves the puzzle a block reward and the fees of all transaction are given as the total reward to the miner. The block reward is the only way new coins are minted. 
+Any user can mine a block. To mine a block the miner has to solve a hash puzzle (enforce that the hash of the block data has a certain number of leading zeros, that number is regarded as the `difficulty` of the puzzle). When the miner solves the puzzle a block reward and the fees of all transactions are given as the total reward to the miner. The block reward is the only way new coins are minted. 
+Before a block is mined, the whole blockchain is validated i.e. all transactions in previous blocks are validated, and then the block hashes are validated as well.
+When a block has been mined, non-executed transactions are validated and then they are added to the block. Then they are executed and the before mentioned
+reward is given to the miner.
 
 ## To be addressed:
 * Reducing reward after certain number of blocks?
-* Limit the number if transactions contained inside one block?
+* Limit the number of transactions contained inside one block?
 * Keeping the difficulty constant or changing it such that the time required to mined a block it kept constant?
 * Establishing P2P network for blockchain validation between miners?
 
 # How to run the project
-Firstly create a new virtual environment inside the root of the repository.
+If you have git, firstly clone the repository on your machine:
+```bash
+git clone https://github.com/DinnoKoluh/hashchain.git
+```
+In the case you don't have git just directly download the repository from GitHub.
+
+Now create a new virtual environment inside the root of the repository.
 ```bash
 python -m venv venv 
 ```
