@@ -25,14 +25,13 @@ STATIC_DIR = Path(BASE_DIR, "static")
 SECRET_KEY = 'django-insecure-y)w&rz8auvyuu%xwa70)!c$hhdgwabt-*u_&x$&85io@@x#ylq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'hashchain.herokuapp.com']
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'base'
 LOGOUT_REDIRECT_URL = 'base'
-DISABLE_COLLECTSTATIC=1
 
 # Application definition
 
@@ -126,7 +125,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
