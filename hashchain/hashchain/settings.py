@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'hashchain.herokuapp.com']
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'base'
 LOGOUT_REDIRECT_URL = 'base'
-
+DISABLE_COLLECTSTATIC=1
 
 # Application definition
 
