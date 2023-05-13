@@ -3,7 +3,7 @@
 *__pycache__
 unused.py
 *.vscode
-*.sqlite3
+//*.sqlite3
 *.png
 TODO.txt
 test.ipynb
