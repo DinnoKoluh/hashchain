@@ -1,0 +1,54 @@
+.mine_block_button, 
+.validate_chain_button{
+    background-color: #ba3b00;; 
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 2px 1px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+.validate_chain_button {
+  background-color: #1357d4;; 
+}
+  
+.tx_button {
+    position: relative;
+    background-color: #008CBA; 
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 1px 1px;
+    border-radius: 4px;
+}
+  
+.submit_tx_button {
+  position: relative;
+  background-color: #0e7405; 
+  border: none;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 0px;
+  cursor: pointer;
+  border-radius: 4px;
+  left: 50%;
+  -ms-transform: translate(-50%, 0%);
+  transform: translate(-50%, 0%);
+  transition: color 0.25s ease;
+}
+    /* .tx_button:active{
+      background-color: rgb(238, 80, 7);
+      
+      } */

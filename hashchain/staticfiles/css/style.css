@@ -1,0 +1,86 @@
+@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css');  /* adding the message symbols */
+
+/* Global styles */
+body {
+    margin: 0;
+    padding: 0px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: white;
+    background-color: rgb(139, 130, 117);
+  }
+  
+/* Header styles */
+header {
+  background-color: #111;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+}
+
+header a {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.toolbar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  padding: 0 10px;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Main content styles */
+main {
+  padding: 100px 20px;
+}
+
+.center_table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* https://codepen.io/DobsonDev/pen/GgRJwv */
+.info-msg,
+.success-msg,
+.warning-msg,
+.error-msg {
+  padding: 10px;
+  border-radius: 3px 3px 3px 3px;
+  margin: auto;
+  text-align: center;
+  width: 50%;
+}
+
+.success-msg {
+  color: #270;
+  background-color: #DFF2BF;
+  margin-top: 5px;
+}
+
+.error-msg {
+  margin-top: 5px;
+  color: #D8000C;
+  background-color: #FFBABA;
+}
+
+.digit {
+  font-size: 20px;
+}
+
+.txt {
+  font-size: 15px;
+}
