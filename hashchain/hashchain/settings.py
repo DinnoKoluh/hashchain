@@ -25,9 +25,9 @@ STATIC_DIR = Path(BASE_DIR, "static")
 SECRET_KEY = 'django-insecure-y)w&rz8auvyuu%xwa70)!c$hhdgwabt-*u_&x$&85io@@x#ylq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'hashchain.com']
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'base'
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # added for hosting
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -58,7 +59,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'bc_site.urls'
+ROOT_URLCONF = 'hashchain.urls'
 
 TEMPLATES = [
     {
@@ -76,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'bc_site.wsgi.application'
+WSGI_APPLICATION = 'hashchain.wsgi.application'
 
 
 # Database

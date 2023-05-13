@@ -58,9 +58,9 @@ After activating the environment, install all the required packages from the `re
 ```bash
 pip install -r requirements.txt
 ```
-Now, move to the `bc_site` directory:
+Now, move to the `hashchain` directory:
 ```bash
-cd bc_site
+cd hashchain
 ```
 The next steps are required to setup `django` and create a database:
 ```bash
