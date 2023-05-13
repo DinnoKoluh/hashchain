@@ -224,6 +224,7 @@ class Block(models.Model):
             self.nonce = self.nonce + 1
             self.hash = self.calculateHash()
         end_time = time.time()
+        # add final check for non executed tx so that two block cannot be mined at the same time
         print("Block has been mined successfully! \nTime taken: {}".format(end_time - start_time))
     
     def validate_block_txs(self):
