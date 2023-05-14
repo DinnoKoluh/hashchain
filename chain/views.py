@@ -180,3 +180,10 @@ def validate_chain():
           block.validate_block_txs()
           if (block.hash != block.calculateHash()):
                 raise Exception(f"Hash of block {block.pk} has been changed!")
+
+def validate_account_balances():
+     """
+     Check changes to balance in database (chain validation) --> Go through the whole blockchain and all the tx's, add up
+     all the tx's amounts, fees and rewards and check the current state of accounts
+     """
+     pass
