@@ -36,7 +36,7 @@ reward is given to the miner.
 ## To be addressed:
 * Reducing reward after certain number of blocks?
 * Limit the number of transactions contained inside one block?
-* Keeping the difficulty constant or changing it such that the time required to mined a block it kept constant?
+* Keeping the difficulty constant or changing it such that the time required to mine a block is kept constant?
 * Establishing P2P network for blockchain validation between miners?
 
 # How to run the project
@@ -52,7 +52,7 @@ python -m venv venv
 ```
 Activate the virtual environment:
 ```bash
-python venv/Scripts/activate 
+venv/Scripts/activate 
 ```
 After activating the environment, install all the required packages from the `requirements.txt` file:
 ```bash
